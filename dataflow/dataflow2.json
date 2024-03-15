@@ -1,0 +1,64 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp1_data",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "rank_windowfun",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "window1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as integer,",
+				"          FIRST_NAME as string,",
+				"          LAST_NAME as string,",
+				"          SALARY as integer,",
+				"          DEPARTMENT_ID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 rank(asc(SALARY, true),",
+				"     output(rank_salary as long)) ~> rank1",
+				"rank1 window(over(SALARY),",
+				"     asc(DEPARTMENT_ID, true),",
+				"     sum_SALARY = sum(SALARY)) ~> window1",
+				"window1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empname as string,",
+				"          fname as string,",
+				"          lname as string,",
+				"          sal as string,",
+				"          dept as string",
+				"     ),",
+				"     partitionFileNames:['rank_win_fun_of_emp'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

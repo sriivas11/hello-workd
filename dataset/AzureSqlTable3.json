@@ -1,0 +1,17 @@
+{
+	"name": "AzureSqlTable3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "order_employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

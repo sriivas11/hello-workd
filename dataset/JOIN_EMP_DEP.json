@@ -1,0 +1,17 @@
+{
+	"name": "JOIN_EMP_DEP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "JOIN_EMP_DEP"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

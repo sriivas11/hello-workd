@@ -1,0 +1,54 @@
+{
+	"name": "odd_even_numfile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_adl_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "odd_even_numbers",
+				"folderPath": "input",
+				"container": "test"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "EMPLOYEE_ID",
+				"type": "String"
+			},
+			{
+				"name": "FIRST_NAME",
+				"type": "String"
+			},
+			{
+				"name": "LAST_NAME",
+				"type": "String"
+			},
+			{
+				"name": "SALARY",
+				"type": "String"
+			},
+			{
+				"name": "DEPARTMENT_ID",
+				"type": "String"
+			},
+			{
+				"name": "sno",
+				"type": "String"
+			},
+			{
+				"name": "odd numbers",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

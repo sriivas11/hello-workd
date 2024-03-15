@@ -1,0 +1,50 @@
+{
+	"name": "EMPLOYEESDATA_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPLOYEE_ID",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "FIRST_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SALARY",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "DEPARTMENT_ID",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "LOCATION_ID",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "HIRE_DATE",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

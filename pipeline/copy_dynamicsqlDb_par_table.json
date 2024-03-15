@@ -1,0 +1,90 @@
+{
+	"name": "copy_dynamicsqlDb_par_table",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "dynamic_sqlDb_par",
+						"type": "DatasetReference",
+						"parameters": {
+							"Dbname": {
+								"value": "@pipeline().parameters.inputDBname",
+								"type": "Expression"
+							},
+							"tableName": {
+								"value": "@pipeline().parameters.inputTablename",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dynamic_sqlDb_par",
+						"type": "DatasetReference",
+						"parameters": {
+							"Dbname": {
+								"value": "@pipeline().parameters.outputDBname",
+								"type": "Expression"
+							},
+							"tableName": {
+								"value": "@pipeline().parameters.outputTablename",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"inputDBname": {
+				"type": "string"
+			},
+			"inputTablename": {
+				"type": "string"
+			},
+			"outputDBname": {
+				"type": "string"
+			},
+			"outputTablename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-10T06:49:54Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

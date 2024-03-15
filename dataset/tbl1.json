@@ -1,0 +1,27 @@
+{
+	"name": "tbl1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "names",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl1"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

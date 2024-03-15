@@ -1,0 +1,34 @@
+{
+	"name": "ifactivity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_adl_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Cus1.csv",
+				"folderPath": "input",
+				"container": "ifactivity"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "C.ID",
+				"type": "String"
+			},
+			{
+				"name": "FIRST_NAME",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "union",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_Db_par",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"db_name": "db-sql"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "unionby_pos"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,49 @@
+{
+	"name": "dynamic_sqltables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMPLOYEE_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FIRST_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "LAST_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SALARY",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPARTMENT_ID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

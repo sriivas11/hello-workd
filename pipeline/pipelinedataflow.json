@@ -1,0 +1,40 @@
+{
+	"name": "pipelinedataflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow2",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference",
+						"parameters": {
+							"date": {
+								"value": "'@{formatDateTime('YYYY-MM-DD')}'",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-03-11T06:46:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

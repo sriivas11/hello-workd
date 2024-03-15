@@ -1,0 +1,27 @@
+{
+	"name": "DEPARTMENTDATA_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SqlDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DEPARTMENT_ID",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "DEPARTMENT_NAME",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "departments"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

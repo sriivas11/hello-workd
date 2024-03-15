@@ -1,0 +1,157 @@
+{
+	"name": "if_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "iftable_input",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT MAX(TrxnDate) as Input_Table_Date from DBO.IfTable_input",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dynamic_sqltables",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "iftable_input"
+						}
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "iftable_output",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT MAX(TrxnDate) as Output_Table_Date from DBO.IfTable_output",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dynamic_sqltables",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "IfTable_output"
+						}
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "iftable_input",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "iftable_output",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('iftable_input').output.firstRow.Input_Table_Date, \nactivity('iftable_output').output.firstRow.Output_Table_Date\n)\n",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Copy data1_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dynamic_sqltables",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": "iftable_input"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dynamic_sqltables",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": "iftable_output"
+									}
+								}
+							]
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Wait_true",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-03-13T14:21:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

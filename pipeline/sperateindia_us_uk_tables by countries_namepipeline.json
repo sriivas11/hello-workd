@@ -1,0 +1,281 @@
+{
+	"name": "sperateindia_us_uk_tables by countries_namepipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT DISTINCT COUNTRY FROM DBO.ADDRESS_COMMON",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dynamic_sqltables",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "ADDRESS_COMMON"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup1').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Switch1",
+							"type": "Switch",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().COUNTRY",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "INDIA",
+										"activities": [
+											{
+												"name": "CopyDATA_INDIA",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"sqlReaderQuery": "SELECT NAME,ADDRESS,CITY,COUNTRY FROM DBO.ADDRESS_COMMON WHERE COUNTRY='INDIA'",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "AzureSqlSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "dynamic_sqltables",
+														"type": "DatasetReference",
+														"parameters": {
+															"table_name": "ADDRESS_COMMON"
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dynamic_sqltables",
+														"type": "DatasetReference",
+														"parameters": {
+															"table_name": "ADDRESS_INDIA"
+														}
+													}
+												]
+											}
+										]
+									},
+									{
+										"value": "USA",
+										"activities": [
+											{
+												"name": "CopyDATA_US",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"sqlReaderQuery": "SELECT * FROM DBO.ADDRESS_COMMON WHERE COUNTRY='USA'",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "AzureSqlSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "dynamic_sqltables",
+														"type": "DatasetReference",
+														"parameters": {
+															"table_name": "ADDRESS_COMMON"
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dynamic_sqltables",
+														"type": "DatasetReference",
+														"parameters": {
+															"table_name": "ADDRESS_USA"
+														}
+													}
+												]
+											}
+										]
+									}
+								],
+								"defaultActivities": [
+									{
+										"name": "CopyDATA_OTHERS",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": "SELECT * FROM DBO.ADDRESS_COMMON WHERE COUNTRY NOT IN('INDIA','USA')",
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "dynamic_sqltables",
+												"type": "DatasetReference",
+												"parameters": {
+													"table_name": "ADDRESS_COMMON"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dynamic_sqltables",
+												"type": "DatasetReference",
+												"parameters": {
+													"table_name": "ADDRESS_OTHERS"
+												}
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "NAME_COUNTRY",
+								"value": {
+									"value": "@item().country",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"NAME_COUNTRY": {
+				"type": "String"
+			},
+			"append value": {
+				"type": "Array"
+			},
+			"final_appe": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-14T06:36:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
