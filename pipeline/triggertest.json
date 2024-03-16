@@ -1,5 +1,5 @@
 {
-	"name": "pipeline5",
+	"name": "triggertest",
 	"properties": {
 		"activities": [
 			{
@@ -13,7 +13,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2024-03-16T05:47:46Z"
+		"lastPublishTime": "2024-03-16T06:01:54Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
