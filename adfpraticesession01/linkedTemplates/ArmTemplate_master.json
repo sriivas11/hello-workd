@@ -35,6 +35,18 @@
 			"type": "string",
 			"defaultValue": "srinivas"
 		},
+		"event_trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/3172b2dc-d648-467f-8eea-dc2ee293d93b/resourceGroups/adf_pratice/providers/Microsoft.Storage/storageAccounts/adlsadfpratice"
+		},
+		"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_START_DATE": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowstarttime"
+		},
+		"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_END_DATE": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowendtime"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -120,6 +132,9 @@
 					},
 					"GitHub1_properties_typeProperties_username": {
 						"value": "[parameters('GitHub1_properties_typeProperties_username')]"
+					},
+					"event_trigger_properties_typeProperties_scope": {
+						"value": "[parameters('event_trigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -160,6 +175,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_START_DATE": {
+						"value": "[parameters('new_tumbling_trigger_properties_pipeline_parameters_WINDOW_START_DATE')]"
+					},
+					"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_END_DATE": {
+						"value": "[parameters('new_tumbling_trigger_properties_pipeline_parameters_WINDOW_END_DATE')]"
 					}
 				}
 			},

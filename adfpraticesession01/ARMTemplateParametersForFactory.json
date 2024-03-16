@@ -25,6 +25,15 @@
 		},
 		"GitHub1_properties_typeProperties_username": {
 			"value": "srinivas"
+		},
+		"event_trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/3172b2dc-d648-467f-8eea-dc2ee293d93b/resourceGroups/adf_pratice/providers/Microsoft.Storage/storageAccounts/adlsadfpratice"
+		},
+		"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_START_DATE": {
+			"value": "@trigger().outputs.windowstarttime"
+		},
+		"new_tumbling_trigger_properties_pipeline_parameters_WINDOW_END_DATE": {
+			"value": "@trigger().outputs.windowendtime"
 		}
 	}
 }
