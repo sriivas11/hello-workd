@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfpraticesession01"
+		},
+		"GitHub1_credential": {
+			"value": ""
+		},
+		"LS_SqlDb_connectionString": {
+			"value": ""
+		},
+		"LS_adl_blob_connectionString": {
+			"value": ""
+		},
+		"ls_blob_connectionString": {
+			"value": ""
+		},
+		"sql_Db_par_connectionString": {
+			"value": ""
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://kv-adf-pratice.vault.azure.net/"
+		},
+		"GitHub1_properties_typeProperties_username": {
+			"value": "srinivas"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
