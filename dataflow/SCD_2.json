@@ -1,0 +1,142 @@
+{
+	"name": "SCD_2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "scd_input",
+						"type": "DatasetReference"
+					},
+					"name": "SCDINPUT"
+				},
+				{
+					"dataset": {
+						"referenceName": "SCD_OUTPUT",
+						"type": "DatasetReference"
+					},
+					"name": "SCDOUTPUT"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SCD_OUTPUT",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SCD_OUTPUT",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPID as short,",
+				"          NAME as string,",
+				"          DESIGNATION as string,",
+				"          DEPARTMENT as string,",
+				"          START_DATE as date 'yyyy-MM-dd'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SCDINPUT",
+				"source(output(",
+				"          EMPID as integer,",
+				"          NAME as string,",
+				"          DESIGNATION as string,",
+				"          DEPARTMENT as string,",
+				"          START_DATE as date,",
+				"          END_DATE as date,",
+				"          IS_ACTIVE as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SCDOUTPUT",
+				"SCDOUTPUT, SCDINPUT join(SCDOUTPUT@EMPID == SCDINPUT@EMPID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 filter(IS_ACTIVE=='Y') ~> filter1",
+				"filter1 select(mapColumn(",
+				"          EMPID = SCDOUTPUT@EMPID,",
+				"          NAME = SCDOUTPUT@NAME,",
+				"          DESIGNATION = SCDOUTPUT@DESIGNATION,",
+				"          DEPARTMENT = SCDOUTPUT@DEPARTMENT,",
+				"          START_DATE = SCDOUTPUT@START_DATE,",
+				"          END_DATE = SCDINPUT@START_DATE",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(END_DATE = addDays(END_DATE,-1),",
+				"          IS_ACTIVE = 'N') ~> derivedColumn1",
+				"derivedColumn1 alterRow(updateIf(true())) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPID as integer,",
+				"          NAME as string,",
+				"          DESIGNATION as string,",
+				"          DEPARTMENT as string,",
+				"          START_DATE as date,",
+				"          END_DATE as date,",
+				"          IS_ACTIVE as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['EMPID','START_DATE'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"SCDINPUT sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPID as integer,",
+				"          NAME as string,",
+				"          DESIGNATION as string,",
+				"          DEPARTMENT as string,",
+				"          START_DATE as date,",
+				"          END_DATE as date,",
+				"          IS_ACTIVE as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}
